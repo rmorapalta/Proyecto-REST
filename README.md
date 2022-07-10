@@ -9,11 +9,11 @@ Semestre 2022-1
 Profesor Sebastian Salazar Molina.
 ***
 ### **=> Integrantes Grupo E:**
-
-*-Andres Segarra Pávez
-*-Luis Rivas Sanchez
-*-Rodrigo Mora Palta
-
+***
+-Andres Segarra Pávez.
+-Luis Rivas Sanchez.
+-Rodrigo Mora Palta.
+***
 #### Desarrollo.
 Para comenzar:
 ```bash
