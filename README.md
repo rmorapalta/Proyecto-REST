@@ -1,2 +1,5 @@
-# Proyecto-REST
-Proyecto para el curso de Computación Paralela y Distribuida, UTEM.
+# API REST PROYECT
+to start:
+```bash
+$ npm run start
+```
