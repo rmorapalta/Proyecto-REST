@@ -11,7 +11,9 @@ Profesor Sebastian Salazar Molina.
 ### **=> Integrantes Grupo E:**
 ***
 -Andres Segarra Pávez.
+
 -Luis Rivas Sanchez.
+
 -Rodrigo Mora Palta.
 ***
 #### Desarrollo.
