@@ -10,17 +10,19 @@
 	</style>
 </head>
 <body>
-	<div class="container">
+	<div class="container" style="height: 200px;">
 		<h1>IN CLASSROOM!!</h1>
-		<br><br>
-		<button type="button" class="btn btn-success" id="getout">Send POST to getout</button>
-		<br><br>
-		<button type="button" class="btn btn-success" id="getin">Send POST to getin</button>
-		<br><br>
-		<button type="button" class="btn btn-primary" id="attendances">Send GET to attendances</button>
-		<br><br>
-		<br><br>
-		<button type="button" class="btn btn-primary" id="authLogin">Send GET to authentication/login </button>
+		<div class="d-flex flex-row p-2 bd-highlight h-100">
+			<div class="d-flex flex-column justify-content-around mx-5">
+				<button type="button" class="btn btn-success" id="getout">Send POST to getout</button>
+				<button type="button" class="btn btn-success" id="getin">Send POST to getin</button>
+				<button type="button" class="btn btn-primary" id="attendances">Send GET to attendances</button>
+			</div>
+			<div class="d-flex flex-column justify-content-around mx-5">
+				<button type="button" class="btn btn-primary" id="authResult">Send GET to authentication/result </button>
+				<button type="button" class="btn btn-primary" id="authLogin">Send GET to authentication/login </button>
+			</div>
+		</div>
 	</div>
 	<script type="text/javascript">
 		/* <![CDATA[ */
@@ -29,6 +31,8 @@
 			const urlParams = new URLSearchParams(queryString);
 			return urlParams.get("jwt");
 		}
+		console.log("TOKEN: "+sessionStorage.getItem('token'))
+		console.log("SIGN: "+sessionStorage.getItem('sign'))
 		console.log("JWT: "+getJWT())
 
 		jQuery(document).ready(function () {
@@ -42,15 +46,15 @@
 						"accept": "application/json",
 						"Content-Type": "application/json"
 					},
-					url: 'localhost:3000/v1/classroom/getout',
+					url: '/v1/classroom/getout',
 					dataType: 'json',
 					success: function (respuesta) {
 						console.log(respuesta);
 					},
-					error: function (xhr, status) {
+					error: function (xhr, status, error) {
 						console.log(xhr);
 						console.log(status);
-						console.log("Peticion getout fallida");
+						console.log(error);
 					}
 				});
 			});
@@ -65,15 +69,15 @@
 						"accept": "application/json",
 						"Content-Type": "application/json"
 					},
-					url: 'localhost:3000/v1/classroom/getin',
+					url: '/v1/classroom/getin',
 					dataType: 'json',
 					success: function (respuesta) {
 						console.log(respuesta);
 					},
-					error: function (xhr, status) {
+					error: function (xhr, status, error) {
 						console.log(xhr);
 						console.log(status);
-						console.log("La autenticación falló");
+						console.log(error);
 					}
 				});
 			});
@@ -88,26 +92,52 @@
 						"accept": "application/json",
 						"Content-Type": "application/json"
 					},
-					url: 'localhost:3000/v1/classroom/attendances',
+					url: '/v1/classroom/attendances',
+					crossDomain : true,
 					dataType: 'json',
 					success: function (respuesta) {
 						console.log(respuesta);
 					},
-					error: function (xhr, status) {
-						console.log(xhr);
+					error: function (xhr, status, error) {
+						console.log(xhr.responseText);
 						console.log(status);
-						console.log("La autenticación falló");
+						console.log(error);
+					}
+				});
+			});
+
+			// AUTHENTICATION
+			jQuery("#authResult").click(function (event) {
+				jQuery.ajax({
+					sync: 'true',
+					type: 'GET',
+					headers: {
+						"accept": "application/json",
+						"Content-Type": "application/json"
+					},
+					url: '/v1/authentication/login',
+					crossDomain : true,
+					dataType: 'json',
+					success: function (respuesta) {
+						console.log(respuesta);
+						sessionStorage.setItem("token", respuesta.token);
+						sessionStorage.setItem("sign", respuesta.sign);
+						window.location = respuesta.redirectUrl;
+					},
+					error: function (xhr, status, error) {
+						console.log(xhr.responseText);
+						console.log(status);
+						console.log(error);
 					}
 				});
 			});
 
 			jQuery("#authLogin").click(function (event) {
-				jQuery.get("localhost:3000/v1/authentication/login", function (respuesta) {
+				jQuery.get("https://api.sebastian.cl/classroom/v1/authentication/login", function (respuesta) {
 					console.log(respuesta);
 					sessionStorage.setItem("token", respuesta.token);
 					sessionStorage.setItem("sign", respuesta.sign);
-					// window.location = respuesta.redirectUrl;
-					console.log(respuesta.redirectUrl)
+					window.location = respuesta.redirectUrl;
 				});
 			});
 		});

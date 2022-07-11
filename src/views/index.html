@@ -10,12 +10,14 @@
 	</style>
 </head>
 <body>
-	<div class="container">
+	<div class="container" style="height: 200px;">
 		<h1>INDEX</h1>
-		<br>
-		<button type="button" class="btn btn-success" id="postToken">Send POST to /v1/tokens/request</button>
-		<br><br>
-		<button type="button" class="btn btn-primary" id="getToken">Send GET to /v1/tokens/_token_/jwt </button>
+		<div class="d-flex flex-row p-2 bd-highlight h-100">
+			<div class="d-flex flex-column justify-content-around mx-5">
+				<button type="button" class="btn btn-success" id="postToken">Send POST to /v1/tokens/request</button>
+				<button type="button" class="btn btn-primary" id="getToken">Send GET to /v1/tokens/_token_/jwt </button>
+			</div>
+		</div>
 	</div>
 	<script type="text/javascript">
 		/* <![CDATA[ */
@@ -46,10 +48,10 @@
 						sessionStorage.setItem("sign", respuesta.sign);
 						window.location = respuesta.redirectUrl;
 					},
-					error: function (xhr, status) {
+					error: function (xhr, status, error) {
 						console.log(xhr);
 						console.log(status);
-						console.log("La autenticación falló");
+						console.log(error)
 					}
 				});
 			});
