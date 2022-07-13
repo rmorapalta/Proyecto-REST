@@ -3,12 +3,8 @@ const app = express();
 const cors = require('cors');
 const morgan = require('morgan')
 const cookieParser = require('cookie-parser');
-const mainRouter = require('./routes/index.js')
-const tokenRouter = require('./routes/token-router.js')
-const classroomRouter = require('./routes/classroom-router.js')
-const authRouter = require('./routes/auth-router.js')
+const mainRouter = require('./routes/index')
 
-// TODO: import postgress
 // TODO: import swagger
 
 
@@ -31,10 +27,7 @@ app.use(cookieParser());
 
 
 // ROUTES
-app.use('/', mainRouter)
-app.use('/v1/tokens', tokenRouter)
-app.use('/v1/classroom', classroomRouter)
-app.use('/v1/authentication', authRouter)
+app.use('/grupo-E/', mainRouter)
 
 
 // START SERVER

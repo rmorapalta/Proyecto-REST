@@ -1,15 +1,32 @@
-CREATE DATABASE estudiantes;
-
-CREATE TABLE IF NOT EXISTS users (
+CREATE TABLE IF NOT EXISTS student (
 	id SERIAL PRIMARY KEY,
 	email TEXT,
-	name VARCHAR(20),
-	classroom VARCHAR(6),
-	subject VARCHAR(8),
-	entrance VARCHAR(24),
-	leaving VARCHAR(24)
+	nombre VARCHAR
 );
 
-INSERT INTO users (email, name, classroom) VALUES
-    ('lucho@utem.cl', 'aka420', 'M2-420'),
-    ('andres@utem.cl', 'andre', 'M2-wfu');
+CREATE TABLE IF NOT EXISTS section (
+	id SERIAL PRIMARY KEY,
+	nombre VARCHAR NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS attendance (
+	id SERIAL PRIMARY KEY,
+	email VARCHAR NOT NULL,
+	sala VARCHAR NOT NULL,
+	seccion VARCHAR NOT NULL,
+	entrada VARCHAR,
+	salida VARCHAR
+);
+
+CREATE TABLE IF NOT EXISTS grade (
+	id SERIAL PRIMARY KEY,
+	id_seccion INT NOT NULL,
+	id_estudiante INT NOT NULL,
+	CONSTRAINT fk_seccion
+		FOREIGN KEY(id_seccion)
+			references seccion(id),
+	CONSTRAINT fk_estudiante
+		FOREIGN KEY(id_estudiante)
+			references estudiante(id)
+)
+
