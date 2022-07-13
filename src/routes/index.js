@@ -1,23 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
-const jwt = require('jwt-simple');
 const jwtDecode = require('jwt-decode');
-const { pool } = require('../controllers/index.controllers')
-
-//const { getName } = require('../controllers/index.controllers')
-
+const { pool } = require('../controllers/database.controllers')
 // timestamp = new Date().toISOString();
 
-router.get("/", (req, res) => {
-	// Show page
+
+router.get("/", (_, res) => {
 	//res.sendFile(path.join(__dirname, '../views/index.html'));
 	res.send("Server running..");
 })
 
 
 // Ingreso
-router.get("/login", (req, res) => {
+router.get("/login", (_, res) => {
 	try {
 		var config = {
 			method: 'post',
@@ -46,7 +42,7 @@ router.get("/login", (req, res) => {
 
 
 // Chequear asistencias
-router.get("/attendance", async (req, res) => {
+router.get("/attendance", async (_, res) => {
 	try {
 		var asistencias = await pool.query('SELECT * FROM attendance WHERE entrada IS NOT NULL AND salida IS NOT NULL');
 		res.status(200).json(asistencias.rows);
@@ -57,19 +53,19 @@ router.get("/attendance", async (req, res) => {
 
 
 // Ingresar asistencia
-router.get("/getin", async (req, res) => {
+router.post("/getin", async (req, res) => {
 	try {
 		if (req.body.classroom != null && req.body.subject != null && req.body.entrance !=null) {
 			const userToken = req.headers['jwt'];
 			let payload = {};
 			payload = jwtDecode(userToken);
-			var queryEstudiante = await db.query('SELECT * FROM student WHERE email=$1',[payload.email])
-			if (queryEstudiante['rows'].length > 0) {
-				var querySeccion = await db.query('SELECT * FROM section WHERE nombre=$1',[req.body.subject]);
-				if (querySeccion['rows'].length > 0) {
-					var queryCurso = await db.query('SELECT * FROM grade WHERE id_estudiante=$1 AND id_seccion=$2',[queryEstudiante['rows'][0]['id'],querySeccion['rows'][0]['id']])
-					if (queryCurso['rows'].length > 0) {
-						await db.query('INSERT INTO attendance(email,sala,seccion,entrada) VALUES($1,$2,$3,$4)',[payload.email,req.body.classroom,req.body.subject,req.body.entrance]);
+			var queryStudent = await pool.query('SELECT * FROM student WHERE email=$1',[payload.email])
+			if (queryStudent['rows'].length > 0) {
+				var querySection = await pool.query('SELECT * FROM section WHERE nombre=$1',[req.body.subject]);
+				if (querySection['rows'].length > 0) {
+					var queryGrade = await pool.query('SELECT * FROM grade WHERE id_student=$1 AND id_section=$2',[queryStudent['rows'][0]['id'],querySection['rows'][0]['id']])
+					if (queryGrade['rows'].length > 0) {
+						await pool.query('INSERT INTO attendance(email,sala,section,entrada) VALUES($1,$2,$3,$4)',[payload.email,req.body.classroom,req.body.subject,req.body.entrance]);
 						res.status(200).json({
 							"classroom" : req.body.classroom,
 							"subject" : req.body.subject,
@@ -94,22 +90,22 @@ router.get("/getin", async (req, res) => {
 });
 
 
-// Ingresar salida
-router.get("/getout", async (req, res) => {
+// Salida
+router.post("/getout", async (req, res) => {
 	try {
 		if (req.body.classroom != null && req.body.subject != null && req.body.entrance !=null) {
 			const userToken = req.headers['jwt'];
 			let payload = {};
 			payload = jwtDecode(userToken);
-			var queryEstudiante = await db.query('SELECT * FROM student WHERE email=$1',[payload.email])
-			if (queryEstudiante['rows'].length > 0) {
-				var querySeccion = await db.query('SELECT * FROM section WHERE nombre=$1',[req.body.subject]);
-				if (querySeccion['rows'].length > 0) {
-					var queryCurso = await db.query('SELECT * FROM grade WHERE id_estudiante=$1 AND id_seccion=$2',[queryEstudiante['rows'][0]['id'],querySeccion['rows'][0]['id']])
-					if (queryCurso['rows'].length > 0) {
-						var queryEntrada = await db.query('SELECT * FROM attendance WHERE email=$1 AND entrada=$2 AND seccion=$3 AND sala=$4',[payload.email,req.body.entrance,req.body.subject,req.body.classroom]);
-						if (queryEntrada['rows'].length > 0) {
-							await db.query('UPDATE attendance SET salida=$1 WHERE id=$2',[req.body.leaving,queryEntrada['rows'][0]['id']]);
+			var queryStudent = await pool.query('SELECT * FROM student WHERE email=$1',[payload.email])
+			if (queryStudent['rows'].length > 0) {
+				var querySection = await pool.query('SELECT * FROM section WHERE nombre=$1',[req.body.subject]);
+				if (querySection['rows'].length > 0) {
+					var queryGrade = await pool.query('SELECT * FROM grade WHERE id_student=$1 AND id_section=$2',[queryStudent['rows'][0]['id'],querySection['rows'][0]['id']])
+					if (queryGrade['rows'].length > 0) {
+						var queryEntrance = await pool.query('SELECT * FROM attendance WHERE email=$1 AND entrada=$2 AND section=$3 AND sala=$4',[payload.email,req.body.entrance,req.body.subject,req.body.classroom]);
+						if (queryEntrance['rows'].length > 0) {
+							await pool.query('UPDATE attendance SET salida=$1 WHERE id=$2',[req.body.leaving,queryEntrance['rows'][0]['id']]);
 							res.status(200).json({
 								"classroom" : req.body.classroom,
 								"subject" : req.body.subject,
