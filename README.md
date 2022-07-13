@@ -1,23 +1,26 @@
 # API REST PROYECT
+## ✨ Proyecto de asistencia por lectura de codigo QR - API REST
+- Asignatura Computación Paralela y Distribuida (INFB8090)
+- Semestre 2022-1
+- Profesor Sebastian Salazar Molina.
 
-## Proyecto de asistencia por lectura de codigo QR - API REST
-***
-Computación Paralela y Distribuida - INFB8090
+<br>
 
-Semestre 2022-1
+## ✨ Descripcion
+- Este proyecto de aplicación REST va a permitir llevar registro asistencia mediante la lectura de códigos QR. Se utilizaron las tecnologías de ExpressJS, NodeJS y PostgreSQL.
 
-Profesor Sebastian Salazar Molina.
-***
-### **=> Integrantes Grupo E:**
-***
--Andres Segarra Pávez.
+<br>
 
--Luis Rivas Sanchez.
+## ✨ Integrantes Grupo E
+- Andres Segarra Pávez (andres.segarrap@utem.cl).
+- Luis Rivas Sanchez (luis.rivass@utem.cl).
+- Rodrigo Mora Palta (rmora@utem.cl).
 
--Rodrigo Mora Palta.
-***
-#### Desarrollo.
-Para comenzar:
+<br>
+
+### ✨ Desarrollo
+- Para levantar con docker:
 ```bash
-$ npm run start
+$ docker compose build
+$ docke compose up
 ```
