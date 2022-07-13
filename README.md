@@ -19,8 +19,8 @@
 <br>
 
 ### ✨ Desarrollo
-- Para levantar con docker:
+- Para levantar con Docker:
 ```bash
 $ docker compose build
-$ docke compose up
+$ docker compose up
 ```
