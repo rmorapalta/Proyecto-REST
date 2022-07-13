@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS grade (
 	id SERIAL PRIMARY KEY,
 	id_section INT NOT NULL,
 	id_student INT NOT NULL,
-	CONSTRAINT fk_seccion
+	CONSTRAINT fk_section
 		FOREIGN KEY(id_section)
 			references section(id),
 	CONSTRAINT fk_student
