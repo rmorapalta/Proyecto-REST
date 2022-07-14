@@ -7,7 +7,6 @@ const { pool } = require('../controllers/database.controllers');
 const { authentication } = require('../middleware/auth');
 
 
-<<<<<<< Updated upstream
 /**
  * @openapi
  * /:
@@ -17,8 +16,6 @@ const { authentication } = require('../middleware/auth');
  *       200:
  *         description: Returns server running
  */
-=======
->>>>>>> Stashed changes
 router.get("/", (_, res) => {
 	//res.sendFile(path.join(__dirname, '../views/index.html'));
 	res.status(200).send('Server running..');
