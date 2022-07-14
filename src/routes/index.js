@@ -7,15 +7,6 @@ const { pool } = require('../controllers/database.controllers');
 const { authentication } = require('../middleware/auth');
 
 
-/**
- * @openapi
- * /:
- *   get:
- *     description: Welcome to home
- *     responses:
- *       200:
- *         description: Returns server running
- */
 router.get("/", (_, res) => {
 	//res.sendFile(path.join(__dirname, '../views/index.html'));
 	res.status(200).send('Server running..');
