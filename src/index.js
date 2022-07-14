@@ -27,17 +27,9 @@ const swaggerDocs = swaggerJsdoc({
 			},
 			servers: ["http://localhost:3000"]
 		},
-		components: {
-			securitySchemes: {
-				bearerAuth: {
-					type: "http",
-					scheme: "bearer",
-					bearerFormat: "JWT"
-				}
-			}
-		}
+		apis: ["./routes/*.js"]
 	},
-	apis: ["./routes/*.js"]
+	
 });
 
 
