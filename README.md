@@ -18,8 +18,28 @@
 
 <br>
 
+## ✨ Requerimientos
+- NodeJS, tener una version de Node
+```bash
+$ sudo apt install nodejs
+```
+- NPM, tener una version de NPM
+```bash
+$ sudo apt install npm
+```
+- Cliente de base de datos **PostgreSQL**
+```bash
+$ sudo apt install postgresql postgresql-contrib
+```
+- Docker, se requiere tener instalada una version de Docker, para esto se requieren seguir los pasos indicados en el siguiente link:
+```bash
+https://docs.docker.com/engine/install/ubuntu/
+```
+
+<br>
+
 ### ✨ Desarrollo
-- Para levantar con Docker:
+- Para levantar el proyecto usaremos Docker, de la siguiente manera:
 ```bash
 $ docker compose build
 $ docker compose up

@@ -1,25 +1,49 @@
 const express = require('express');
 const router = express.Router();
-const axios = require('axios'); //libreria axios, para incluir a otra api
+const axios = require('axios');
 const jwtDecode = require('jwt-decode');
+const path = require('path');
 const { pool } = require('../controllers/database.controllers');
 const { authentication } = require('../middleware/auth');
 
 
-// Home
+<<<<<<< Updated upstream
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     description: Welcome to home
+ *     responses:
+ *       200:
+ *         description: Returns server running
+ */
+=======
+>>>>>>> Stashed changes
 router.get("/", (_, res) => {
 	//res.sendFile(path.join(__dirname, '../views/index.html'));
-	res.send("Server running..");
+	res.status(200).send('Server running..');
 })
 
 
-// Ingreso
+/**
+ * @swagger
+ * /login:
+ *   get:
+ *     tags: [authentication-rest]
+ *     summary: Send request to token request
+ *     operationid: login
+ *     responses:
+ *       200:
+ *         description: get the token, sign and URL to login
+ *       400:
+ *         description: Error in the token response
+ */
 router.get("/login", (_, res) => {
 	try {
 		var config = {
 			method: 'post',
 			url: 'https://api.sebastian.cl/UtemAuth/v1/tokens/request',
-			headers: { //token y key dadas 
+			headers: { // TOKEN y KEY propias del grupo E
 				'X-API-TOKEN': 'CPYD-E-202201',
 				'X-API-KEY': 'e45e7ae59d1c4df3aaa2482cbb38434b',
 				'Content-Type': 'application/json'
@@ -39,10 +63,26 @@ router.get("/login", (_, res) => {
 	} catch (error) {
 		res.status(400).json(error);
 	}
+});
+router.get("/success", (_, res) => {
+	res.sendFile(path.join(__dirname, '../views/success.html'));
+})
+router.get("/failed", (_, res) => {
+	res.sendFile(path.join(__dirname, '../views/failed.html'));
 })
 
 
-// Chequear asistencias
+/**
+ * @swagger
+ * /attendances:
+ *   get:
+ *     description: Check attendances information
+ *     responses:
+ *       200:
+ *         description: Send attendance information
+ *       400:
+ *         description: Attendances not found
+ */
 router.get("/attendances", authentication, async (_, res) => {
 	try {
 		var asistencias = await pool.query('SELECT * FROM attendance WHERE entrada IS NOT NULL AND salida IS NOT NULL');
@@ -53,24 +93,46 @@ router.get("/attendances", authentication, async (_, res) => {
 })
 
 
-// Ingresar asistencia
+/**
+ * @swagger
+ * /getin:
+ *   post:
+ *     tags: [classroom-rest]
+ *     description: Check attendances information
+ *     operationid: Getin
+ *     parameters:
+ *       name: Authorization
+ *       in: header
+ *       required: true
+ *     requestBody:
+ *       content:
+ *         aplication/json:
+ *           classroom
+ *           entrance
+ *           subject
+ *     responses:
+ *       200:
+ *         description: Insert attendance data
+ *       400:
+ *         description: Error in the attendance query
+ */
 router.post("/getin", authentication, async (req, res) => {
 	try {
 		if (req.body.classroom != null && req.body.subject != null && req.body.entrance !=null) {
 			const userToken = req.headers['jwt'];
 			let payload = {};
-			//payload carga con el jwt ya codificado
+			// Payload carga con el jwt ya codificado
 			payload = jwtDecode(userToken);
-		    // se saca el dato del estudiante de la base de datos
+			// Se saca el dato del estudiante de la base de datos
 			var queryStudent = await pool.query('SELECT * FROM student WHERE email=$1',[payload.email]);
 			if (queryStudent['rows'].length > 0) {
-				//si encuentra al estudiante, se saca datos proveniente de la seccion
+				// Si encuentra al estudiante, se saca datos proveniente de la seccion
 				var querySection = await pool.query('SELECT * FROM section WHERE nombre=$1',[req.body.subject]);
 				if (querySection['rows'].length > 0) {
-					// comprobar si existe la seccion
+					// Comprobar si existe la seccion
 					var queryGrade = await pool.query('SELECT * FROM grade WHERE id_section=$1 AND id_student=$2',[querySection['rows'][0]['id'],queryStudent['rows'][0]['id']]);
 					if (queryGrade['rows'].length > 0) {
-					// insertar datos a asistencia
+						// Insertar datos a asistencia
 						await pool.query('INSERT INTO attendance(email,sala,section,entrada) VALUES($1,$2,$3,$4)',[payload.email,req.body.classroom,req.body.subject,req.body.entrance]);
 						res.status(200).json({ //insertar datos
 							"classroom" : req.body.classroom,
@@ -78,7 +140,6 @@ router.post("/getin", authentication, async (req, res) => {
 							"entrance" : req.body.entrance,
 							"email" : payload.email
 						});
-					 //errores que puede tirar la peticion
 					} else {
 						res.status(400).json('[ERROR] El estudiante no pertence a esta seccion');
 					}
@@ -97,27 +158,50 @@ router.post("/getin", authentication, async (req, res) => {
 });
 
 
-// Salida
+/**
+ * @swagger
+ * /getin:
+ *   post:
+ *     tags: [classroom-rest]
+ *     description: Classroom get out information
+ *     operationid: GetOut
+ *     parameters:
+ *       name: Authorization
+ *       in: header
+ *       required: true
+ *     requestBody:
+ *       content:
+ *         aplication/json:
+ *           classroom
+ *           entrance
+ *           leaving
+ *           subject
+ *     responses:
+ *       200:
+ *         description: Send attendance information
+ *       400:
+ *         description: Attendances not found
+ */
 router.post("/getout", authentication, async (req, res) => {
 	try {
 		if (req.body.classroom != null && req.body.subject != null && req.body.entrance !=null) {
 			const userToken = req.headers['jwt'];
 			let payload = {};
-			//payload carga con el jwt ya codificado
+			// Payload carga con el jwt ya codificado
 			payload = jwtDecode(userToken);
-			// se saca el dato del estudiante de la base de datos
+			// Se saca el dato del estudiante de la base de datos
 			var queryStudent = await pool.query('SELECT * FROM student WHERE email=$1',[payload.email]);
 			if (queryStudent['rows'].length > 0) {
-				//si encuentra al estudiante, se saca datos proveniente de la seccion
+				// Si encuentra al estudiante, se saca datos proveniente de la seccion
 				var querySection = await pool.query('SELECT * FROM section WHERE nombre=$1',[req.body.subject]);
 				if (querySection['rows'].length > 0) {
-					// comprobar si existe la seccion
+					// Comprobar si existe la seccion
 					var queryGrade = await pool.query('SELECT * FROM grade WHERE id_student=$1 AND id_section=$2',[queryStudent['rows'][0]['id'],querySection['rows'][0]['id']]);
 					if (queryGrade['rows'].length > 0) {
-					// seleccionar datos desde asistencia, de entrada y seccion y sala
+						// Seleccionar datos desde asistencia, de entrada y seccion y sala
 						var queryEntrance = await pool.query('SELECT * FROM attendance WHERE email=$1 AND entrada=$2 AND section=$3 AND sala=$4',[payload.email,req.body.entrance,req.body.subject,req.body.classroom]);
 						if (queryEntrance['rows'].length > 0) {
-							// se hace un update  a la base de datos, donde se ingresa salida
+							// Se hace un update  a la base de datos, donde se ingresa salida
 							await pool.query('UPDATE attendance SET salida=$1 WHERE id=$2',[req.body.leaving,queryEntrance['rows'][0]['id']]);
 							res.status(200).json({ //insertar datos
 								"classroom" : req.body.classroom,
@@ -125,7 +209,6 @@ router.post("/getout", authentication, async (req, res) => {
 								"entrance" : req.body.entrance,
 								"leaving" : req.body.leaving
 							});
-						//errores que puede tirar la peticion  
 						} else {
 							res.status(400).json('[ERROR] El ingreso a la sala no fue en la fecha indicada');
 						}
@@ -144,7 +227,7 @@ router.post("/getout", authentication, async (req, res) => {
 	} catch (error) {
 		res.status(400).json(error);
 	}
-})
+});
 
 
 module.exports = router;

@@ -1,25 +1,26 @@
 version: "3.7"
-#creando servicio/base de datos
+
+# Creando servicio/base de datos
 services:
-  database: #creando contenedores
+  database:
     container_name: postgres
     image: postgres
-    volumes: #docker trabaja con volumenes
+    volumes:
       - /path/to/postgresql-persistence:/bitnami/postgresql
       - ./database:/docker-entrypoint-initdb.d
     environment:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_DB=classroom
-    ports: # rango de puertos que puede oir
+    ports:
       - "6432:5432"
-  app: #nombre del contenedor de docker
+  app:
     container_name: apirest_classroom
     build: .
     ports:
       - 3000:3000
     depends_on:
       - database
-    environment: #entorno de postresql
+    environment:
       - DATABASE_URL=postgres://postgres:postgres@database:5432/classroom
 

@@ -4,7 +4,7 @@ async function initDatabase(){
 	try {
 		var queryStudent = 'SELECT exists(SELECT 1 FROM student WHERE nombre=$1)'
 		var insertStudent = 'INSERT INTO student(email,nombre) VALUES($1,$2)'
-		// se necesita dejar al profesor en la base de datos para que se logee 
+		// se necesita dejar al profesor en la base de datos para que pueda ingresar
 
 		var resp1 = await pool.query(queryStudent,['Sebastian'])
 		var resp2 = await pool.query(queryStudent,['Andres'])
