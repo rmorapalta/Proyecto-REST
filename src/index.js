@@ -5,10 +5,6 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const swaggerJsdoc = require("swagger-jsdoc");
 const swaggerUI = require("swagger-ui-express");
-<<<<<<< Updated upstream
-=======
-const path = require('path');
->>>>>>> Stashed changes
 const mainRouter = require('./routes/index');
 const fs = require('fs');
 const sql = fs.readFileSync('./database/database.sql').toString();
@@ -28,7 +24,6 @@ const swaggerDocs = swaggerJsdoc({
 			contact: {
 				name: "Grupo E",
 				email: "rmora@utem.cl"
-<<<<<<< Updated upstream
 			},
 			servers: ["http://localhost:3000"]
 		},
@@ -43,17 +38,6 @@ const swaggerDocs = swaggerJsdoc({
 		}
 	},
 	apis: ["./routes/*.js"]
-=======
-			}
-		},
-		servers: [
-			{
-				url: "http://localhost:3000"
-			}
-		]
-	},
-	apis: [`${path.join(__dirname, "./routes/*.js")}`]
->>>>>>> Stashed changes
 });
 
 
